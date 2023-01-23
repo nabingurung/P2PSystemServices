@@ -1,4 +1,20 @@
+using RabbitMQ.Client;
+using ReadApi.MessageBroker;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var rabbitHostName = Environment.GetEnvironmentVariable("RABBIT_HOSTNAME");
+var connectionFactory = new ConnectionFactory
+{
+    HostName = rabbitHostName ?? "localhost",
+    Port = 5672,
+    UserName = Environment.GetEnvironmentVariable("RABBIT_HOSTNAME"),
+    Password = Environment.GetEnvironmentVariable("RABBIT_HOSTNAME")
+};
+
+var rabbitMqConnection = connectionFactory.CreateConnection();
+builder.Services.AddSingleton(rabbitMqConnection);
+builder.Services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
 
 // Add services to the container.
 
