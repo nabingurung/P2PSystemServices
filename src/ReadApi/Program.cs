@@ -8,8 +8,8 @@ var connectionFactory = new ConnectionFactory
 {
     HostName = rabbitHostName ?? "localhost",
     Port = 5672,
-    UserName = Environment.GetEnvironmentVariable("RABBIT_HOSTNAME"),
-    Password = Environment.GetEnvironmentVariable("RABBIT_HOSTNAME")
+    UserName = Environment.GetEnvironmentVariable("RABBIT_USER"),
+    Password = Environment.GetEnvironmentVariable("RABBIT_PASS")
 };
 
 var rabbitMqConnection = connectionFactory.CreateConnection();
