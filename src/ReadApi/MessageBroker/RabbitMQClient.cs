@@ -25,9 +25,11 @@ namespace ReadApi.MessageBroker
             var props = _channel.CreateBasicProperties();
             props.AppId = "ReadApi";
             props.Persistent = true;
-            props.UserId = "p2p1";
+            props.UserId = Environment.GetEnvironmentVariable("RABBIT_USER");
             props.MessageId = Guid.NewGuid().ToString("N");
             props.Timestamp = new AmqpTimestamp(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+            _channel.QueueDeclare(queue: routingKey,
+                           exclusive: false);
             var body = Encoding.UTF8.GetBytes(payload);
             _channel.BasicPublish(exchange, routingKey, props, body);
             _channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 5));

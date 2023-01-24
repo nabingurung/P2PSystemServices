@@ -34,9 +34,9 @@ namespace ReadApi.Controllers
                 Id = 1
             };
             var payload = JsonSerializer.Serialize(newReadRequest);
-            Logger.LogInformation($"New order created: {payload}");
+            Logger.LogInformation($"New read created: {payload}");
 
-            RabbitMQClient.Publish("ordering", "order.created", payload);
+            RabbitMQClient.Publish("", "newreads", payload);
 
             return Ok();
 

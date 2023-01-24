@@ -4,6 +4,8 @@ using ReadApi.MessageBroker;
 var builder = WebApplication.CreateBuilder(args);
 
 var rabbitHostName = Environment.GetEnvironmentVariable("RABBIT_HOSTNAME");
+System.Console.WriteLine($"the username for rabbitmq is {Environment.GetEnvironmentVariable("RABBIT_USER")}");
+System.Console.WriteLine($"the username for rabbitmq is {Environment.GetEnvironmentVariable("RABBIT_PASS")}");
 var connectionFactory = new ConnectionFactory
 {
     HostName = rabbitHostName ?? "localhost",
@@ -37,5 +39,14 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+IHostApplicationLifetime lifetime = app.Lifetime;
+
+lifetime.ApplicationStarted.Register(() => { });
+lifetime.ApplicationStopping.Register(() =>
+{
+    var rabbitMqClient = app.Services.GetRequiredService<IRabbitMQClient>();
+    rabbitMqClient.CloseConnection();
+});
 
 app.Run();

@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  rabbitmq3:
+    container_name: "container_rabbitmq"
+    image: rabbitmq:3.8-management-alpine
+    environment:
+     - RABBITMQ_DEFAULT_USER=myuser
+     - RABBITMQ_DEFAULT_PASS=mypassworld
+    ports:
+        - '5672:5672'
+        - '15672:15672'
+
+  readapi:
+    image: ${DOCKER_REGISTRY-}readapi
+    build:
+      context: .
+      dockerfile: src/ReadApi/Dockerfile
+    ports:
+     - "9000:443"
+     - "9001:80"
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=https://+:443;http://+:80
+     - RABBIT_USER=myuser
+     - RABBIT_PASS=mypassworld
+     - RABBIT_HOSTNAME=host.docker.internal
+    restart: on-failure
+    depends_on:
+     - rabbitmq3
+
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/mount/nabin-ssd/docker/lib/postgresql/data
+volumes:
+  db:
+    driver: local   
