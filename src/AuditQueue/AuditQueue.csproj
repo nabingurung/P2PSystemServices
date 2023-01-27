@@ -6,9 +6,31 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-AuditQueue-c2e9d8c7-5c45-4e86-9b39-4d22f0c7642a</UserSecretsId>
      <Version>1.1.1</Version>
+     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="microsoft.entityframeworkcore.design" Version="7.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="npgsql.entityframeworkcore.postgresql" Version="7.0.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Npgsql" Version="7.0.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Dapper" />
+    <None Remove="Npgsql" />
+    <None Remove="Repo\" />
+    <None Remove="DbModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repo\" />
+    <Folder Include="DbModels\" />
   </ItemGroup>
 </Project>
