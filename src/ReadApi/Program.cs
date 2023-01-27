@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
 using ReadApi.MessageBroker;
+using ReadApi.Peristence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,11 @@ var connectionFactory = new ConnectionFactory
 var rabbitMqConnection = connectionFactory.CreateConnection();
 builder.Services.AddSingleton(rabbitMqConnection);
 builder.Services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
+
+// add dbcontext
+builder.Services.AddDbContext<ViolationDbContext>(
+        o => o.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"))
+    );
 
 // Add services to the container.
 
