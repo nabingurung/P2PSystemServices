@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AuditQueue.DbModels
 {
     [Table("violation")]
-	public class Violation
+	public partial class Violation
 	{
         [Key]
         [Column("id")]

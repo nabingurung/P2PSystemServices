@@ -30,6 +30,7 @@
     <None Remove="DbModels\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="Repo\" />
     <Folder Include="DbModels\" />
   </ItemGroup>

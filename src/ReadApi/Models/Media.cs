@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ReadApi.Models
 {
+    [Table("media")]
     public class Media
     {
         [Key]
         [Column("id")]
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         [Column("image_uid", TypeName = "varchar(50)")]
         public string ImageUID { get; set; } = default!;
         [Column("status")]
@@ -18,6 +19,8 @@ namespace ReadApi.Models
         [Column("trans_date")]
         public DateTime LastUpdatedDate { get; set; } = DateTime.UtcNow;
 
+        public long ViolationId { get; set; }
+        public virtual Violation Violation { get; set; }
 
     }
 }

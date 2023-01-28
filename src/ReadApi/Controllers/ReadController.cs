@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using ReadApi.DTOModels;
 using ReadApi.MessageBroker;
 using ReadApi.Models;
+using ReadApi.Peristence;
 
 namespace ReadApi.Controllers
 {
@@ -13,11 +16,15 @@ namespace ReadApi.Controllers
     [Route("api/[controller]")]
     public class ReadController : ControllerBase
     {
+        private readonly IDataAccessProvider dataAccessProvider;
+        private readonly IMapper mapper;
 
-        public ReadController(ILogger<ReadController> logger, IRabbitMQClient rabbitMQClient)
+        public ReadController(ILogger<ReadController> logger, IRabbitMQClient rabbitMQClient, IDataAccessProvider dataAccessProvider, IMapper mapper)
         {
             Logger = logger;
             RabbitMQClient = rabbitMQClient;
+            this.dataAccessProvider = dataAccessProvider;
+            this.mapper = mapper;
             Logger = logger;
         }
 
@@ -25,18 +32,16 @@ namespace ReadApi.Controllers
         public IRabbitMQClient RabbitMQClient { get; }
 
         [HttpPost]
-        public IActionResult Post(NewReadRequest newReadRequest)
+        public async Task<IActionResult> Post(DtoViolation newReadRequest)
         {
 
-            var readRequest = new NewReadRequest
-            {
-                SystemId = newReadRequest.SystemId,
-                Id = 1
-            };
+           var violation = mapper.Map<Violation>(newReadRequest);
+
+            await dataAccessProvider.AddNewViolationAsync(violation);
             var payload = JsonSerializer.Serialize(newReadRequest);
             Logger.LogInformation($"New read created: {payload}");
 
-            RabbitMQClient.Publish("", "newreads", payload);
+           // RabbitMQClient.Publish("", "newreads", payload);
 
             return Ok();
 

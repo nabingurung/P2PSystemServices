@@ -51,6 +51,13 @@ namespace ReadApi.Models
         [Column("trans_date")]
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
 
-        public virtual ICollection<Media> Medias { get; set; } = new HashSet<Media>();
+       // [ForeignKey("media")]
+        //public Guid MediaId { get; set; }
+        public virtual ICollection<Media> Medias { get; set; }
+
+        public Violation()
+        {
+            Medias = new HashSet<Media>();
+        }
     }
 }

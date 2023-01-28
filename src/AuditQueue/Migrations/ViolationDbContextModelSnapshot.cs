@@ -24,10 +24,12 @@ namespace AuditQueue.Migrations
 
             modelBuilder.Entity("AuditQueue.DbModels.Media", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
+                        .HasColumnType("bigint")
                         .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone")
@@ -46,7 +48,7 @@ namespace AuditQueue.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("status");
 
-                    b.Property<long?>("ViolationId")
+                    b.Property<long>("ViolationId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -131,9 +133,13 @@ namespace AuditQueue.Migrations
 
             modelBuilder.Entity("AuditQueue.DbModels.Media", b =>
                 {
-                    b.HasOne("AuditQueue.DbModels.Violation", null)
+                    b.HasOne("AuditQueue.DbModels.Violation", "Violation")
                         .WithMany("Medias")
-                        .HasForeignKey("ViolationId");
+                        .HasForeignKey("ViolationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Violation");
                 });
 
             modelBuilder.Entity("AuditQueue.DbModels.Violation", b =>

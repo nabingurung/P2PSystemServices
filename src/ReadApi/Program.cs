@@ -12,18 +12,22 @@ var connectionFactory = new ConnectionFactory
 {
     HostName = rabbitHostName ?? "localhost",
     Port = 5672,
-    UserName = Environment.GetEnvironmentVariable("RABBIT_USER"),
-    Password = Environment.GetEnvironmentVariable("RABBIT_PASS")
+    UserName = Environment.GetEnvironmentVariable("RABBIT_USER") ?? "myuser",
+    Password = Environment.GetEnvironmentVariable("RABBIT_PASS") ?? "mypassworld"
 };
 
 var rabbitMqConnection = connectionFactory.CreateConnection();
 builder.Services.AddSingleton(rabbitMqConnection);
 builder.Services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
+builder.Services.AddScoped<IDataAccessProvider, DataAccessProvider>();
 
 // add dbcontext
 builder.Services.AddDbContext<ViolationDbContext>(
         o => o.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"))
     );
+
+// add automapper
+builder.Services.AddAutoMapper(typeof(Program));
 
 // Add services to the container.
 
