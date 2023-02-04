@@ -11,5 +11,12 @@
         /// <param name="secondSystemReadTime">Enter the readtimestamp from the second system in Unix time seconds.</param>
         /// <returns></returns>
         double CalculateSpeed(double distanceMeter, long firstSystemReadTime, long secondSystemReadTime);
+
+        /// <summary>
+        /// Returns the violation date from the epoch time in UTC
+        /// </summary>
+        /// <param name="readTimeStamp">epoch time in seconds</param>
+        /// <returns></returns>
+        DateTime GetViolationDate(long readTimeStamp);
     }
 }

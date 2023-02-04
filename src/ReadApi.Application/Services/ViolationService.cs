@@ -31,5 +31,10 @@ namespace ReadApi.Application.Services
             return kph;
             
         }
+
+        public DateTime GetViolationDate(long readTimeStamp)
+        {
+            return DateTimeOffset.FromUnixTimeSeconds(readTimeStamp).UtcDateTime;
+        } 
     }
 }

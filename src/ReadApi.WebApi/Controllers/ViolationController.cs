@@ -78,8 +78,12 @@ namespace ReadApi.WebApi.Controllers
             // discuss the time take .. assuming your are getting in seconds
             violation.TimeTaken = 7200 / 3600; // convert it to hours 
             violation.LicenseState = "UNK";
-            violation.Violationdate= DateTime.UtcNow;
+            
             violation.MetricUnitSystem = "km/hr";
+
+            // get the violation date 
+            violation.Violationdate = violationService.GetViolationDate(newReadRequest.timestamp);
+
 
             // to do 
             // get the previous system readtime
