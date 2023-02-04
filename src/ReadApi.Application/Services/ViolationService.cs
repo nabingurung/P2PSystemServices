@@ -18,6 +18,11 @@ namespace ReadApi.Application.Services
         public double CalculateSpeed(double distanceMeter, long firstSystemReadTime, long secondSystemReadTime )
         {
             var totalTimeTaken = firstSystemReadTime - secondSystemReadTime;
+            if(totalTimeTaken < 0)
+            {
+                throw new ArgumentException("Something is wrong. We are going backwards. " +
+                    "Check the read time from both the systems. Make sure to pass the read time in correct order");
+            } 
            var totalSeconds = DateTimeOffset.FromUnixTimeSeconds(totalTimeTaken).Second;
             
             var kph = (distanceMeter / 1000) / (totalSeconds / 3600);
