@@ -8,6 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 var rabbitHostName = Environment.GetEnvironmentVariable("RABBIT_HOSTNAME");
 System.Console.WriteLine($"the username for rabbitmq is {Environment.GetEnvironmentVariable("RABBIT_USER")}");
 System.Console.WriteLine($"the username for rabbitmq is {Environment.GetEnvironmentVariable("RABBIT_PASS")}");
+
+IConfiguration Configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
+
+var connectionString = Configuration["ConnectionStrings:DbConnection"];
+Console.WriteLine("*****************************************************");
+Console.WriteLine(connectionString);
+Console.WriteLine("*****************************************************");
+
 var connectionFactory = new ConnectionFactory
 {
     HostName = rabbitHostName ?? "localhost",
@@ -23,7 +31,7 @@ builder.Services.AddScoped<IDataAccessProvider, DataAccessProvider>();
 
 // add dbcontext
 builder.Services.AddDbContext<ViolationDbContext>(
-        o => o.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"))
+        o => o.UseNpgsql(connectionString)
     );
 
 // add automapper

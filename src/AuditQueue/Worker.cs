@@ -1,4 +1,6 @@
 using AuditQueue.Models;
+using AuditQueue.Repo;
+using AuditQueue.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
@@ -13,20 +15,23 @@ public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly IConfiguration configuration;
+    private readonly IViolationRepo violationRepo;
+    private readonly IALPRData aLPRData;
     private ConnectionFactory _connectionFactory;
     private IConnection _connection;
     private IModel _channel;
     private const string QueueName = "newreads";
-    public Worker(ILogger<Worker> logger, IConfiguration configuration)
+    public Worker(ILogger<Worker> logger, IConfiguration configuration, IViolationRepo violationRepo
+        )
     {
         _logger = logger;
         this.configuration = configuration;
-        var connectionString = configuration.GetConnectionString("DbConnection");
+        this.violationRepo = violationRepo;        
     }
 
     public override Task StartAsync(CancellationToken cancellationToken)
     {
-        /*
+        
         var rabbitHostName = Environment.GetEnvironmentVariable("RABBIT_HOSTNAME");
         _connectionFactory = new ConnectionFactory
         {
@@ -42,15 +47,18 @@ public class Worker : BackgroundService
         _channel.QueueDeclarePassive(QueueName);
         _channel.BasicQos(0, 1, false);
         _logger.LogInformation($"Queue [{QueueName}] is waiting for messages.");
-        */
+        
+
+
         return base.StartAsync(cancellationToken);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        
         stoppingToken.ThrowIfCancellationRequested();
 
-        while (stoppingToken.IsCancellationRequested)
+        while (!stoppingToken.IsCancellationRequested)
         {
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
@@ -68,7 +76,7 @@ public class Worker : BackgroundService
                     if (ea.BasicProperties.UserId != Environment.GetEnvironmentVariable("RABBIT_USER"))
                     {
                         _logger.LogInformation($"\tIgnored a message sent by [{ea.BasicProperties.UserId}].");
-                        return;
+                       // return;
                     }
 
                     var t = DateTimeOffset.FromUnixTimeMilliseconds(ea.BasicProperties.Timestamp.UnixTime);
@@ -80,7 +88,9 @@ public class Worker : BackgroundService
                     {
                         var newRead = JsonSerializer.Deserialize<NewReadRequest>(message);
                         _logger.LogInformation($"Creating new read #{newRead?.Id} to [{newRead?.SystemId}].");
-
+                        await violationRepo.UpdateAsync(newRead.Id);
+                        await violationRepo.GetAsync(newRead.Id);
+                        await violationRepo.GetAllAsync();
                         await Task.Delay(new Random().Next(1, 3) * 1000, stoppingToken);
 
                         _logger.LogInformation($"NewRead #{newRead?.Id} created successfully");

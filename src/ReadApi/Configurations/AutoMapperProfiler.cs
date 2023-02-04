@@ -9,8 +9,10 @@ namespace ReadApi.Configurations
         public AutoMapperProfiler()
         {
             CreateMap<DtoViolation, Violation>();
-            CreateMap<DtoMedia, Media>();
-          
+            CreateMap<List<Violation>, List<DtoViolation>>();
+              
+           // CreateMap<DtoMedia, Media>();
+         
                 
         }
     }
