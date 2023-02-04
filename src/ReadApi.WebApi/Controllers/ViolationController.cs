@@ -81,7 +81,11 @@ namespace ReadApi.WebApi.Controllers
             violation.Violationdate= DateTime.UtcNow;
             violation.MetricUnitSystem = "km/hr";
 
-            
+            // to do 
+            // get the previous system readtime
+            long previousSystemReadtme = 1675209011;
+
+            violationService.CalculateSpeed(violation.TotalDistanceTravelled, newReadRequest.timestamp, previousSystemReadtme);
 
             violation.VehicleSpeed = unitOfWorkCore
                 .CalculateVehicleSpeed(violation.TotalDistanceTravelled,violation.TimeTaken);
