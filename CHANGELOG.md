@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.4.0"></a>
+## 1.4.0 (2023-2-4)
+
+### Features
+
+* architechtural changes. removed old api project
+* calculate vehicle speed
+* get violation date
+
 <a name="1.3.0"></a>
 ## 1.3.0 (2023-1-27)
 
