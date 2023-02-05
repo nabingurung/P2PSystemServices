@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.5.0"></a>
+## 1.5.0 (2023-2-4)
+
+### Features
+
+*  violation service test project added
+* vehicle speed, violation service test project added
+
 <a name="1.4.0"></a>
 ## 1.4.0 (2023-2-4)
 
