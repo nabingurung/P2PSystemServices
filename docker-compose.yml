@@ -15,7 +15,7 @@ services:
     image: ${DOCKER_REGISTRY-}readapi
     build:
       context: .
-      dockerfile: src/ReadApi/Dockerfile
+      dockerfile: src/ReadApi.WebApi/Dockerfile
     ports:
      - "9000:443"
      - "9001:80"
