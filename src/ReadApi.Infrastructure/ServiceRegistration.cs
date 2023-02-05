@@ -9,6 +9,7 @@ using ReadApi.Infrastructure.Repository.EfCore;
 using RabbitMQ.Client;
 using ReadApi.Core.Services;
 using ReadApi.Infrastructure.MessageBroker;
+using ReadApi.Application.Services;
 
 namespace ReadApi.Infrastructure
 {
@@ -73,6 +74,7 @@ namespace ReadApi.Infrastructure
             services.AddTransient(typeof(IGenericRepositoryCore<>), typeof(GenericRepositoryCore<>));
             services.AddTransient<IViolationRepositoryCore, ViolationRepositoryCore>();
             services.AddTransient<IUnitOfWorkCore, UnitOfWorkCore>();
+            services.AddScoped<IViolationService, ViolationService>();
         }
     }
 }

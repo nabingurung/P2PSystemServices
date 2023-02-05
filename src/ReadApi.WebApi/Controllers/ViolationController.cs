@@ -76,7 +76,7 @@ namespace ReadApi.WebApi.Controllers
             var violation = mapper.Map<Violation>(newReadRequest);
 
             // discuss the time take .. assuming your are getting in seconds
-            violation.TimeTaken = 7200 / 3600; // convert it to hours 
+            violation.TimeTaken = newReadRequest.timestamp;
             violation.LicenseState = "UNK";
             
             violation.MetricUnitSystem = "km/hr";
@@ -87,9 +87,10 @@ namespace ReadApi.WebApi.Controllers
 
             // to do 
             // get the previous system readtime
-            long previousSystemReadtme = 1675209011;
+            long previousSystemReadtme = 1675536564;// 1675536624;
 
-            violationService.CalculateSpeed(violation.TotalDistanceTravelled, newReadRequest.timestamp, previousSystemReadtme);
+            violationService.CalculateSpeed(violation.TotalDistanceTravelled, 
+                newReadRequest.timestamp, previousSystemReadtme);
 
             violation.VehicleSpeed = unitOfWorkCore
                 .CalculateVehicleSpeed(violation.TotalDistanceTravelled,violation.TimeTaken);
